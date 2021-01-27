@@ -1,0 +1,21 @@
+# node
+node_modules
+npm-debug.log
+package-lock.json
+
+# yarn
+yarn.lock
+yarn-error.log
+
+# ignore
+.editorconfig
+.eslintignore
+.eslintrc.js
+.gitignore
+.npmignore
+src
+test
+tests
+tsconfig.json
+
+.DS_Store

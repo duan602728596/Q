@@ -1,0 +1,18 @@
+# node
+node_modules
+
+# project
+./utils
+
+# packages
+packages/**/lib
+packages/**/node_modules
+packages/**/test/babelPresetSweet.js
+packages/**/test/dist
+packages/**/test/.dll
+packages/**/test/.babelCache
+packages/**/test/.terserCache
+packages/server/client/**
+
+# docs
+storybook-static/*
