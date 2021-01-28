@@ -29,20 +29,20 @@ interface TaskFunc {
   (ctx: any, next: Function): Promise<void>;
 }
 
-interface End {
+interface Middle {
   (ctx: any): any;
 }
 
 interface OnionConfig {
-  end?: End;
+  middle?: Middle;
 }
 
 class Onion {
   public tasks: Array<TaskFunc> = [];
-  public endFunc: End;
+  public middleFunc: Middle;
 
   constructor(config?: OnionConfig) {
-    this.endFunc = config?.end ?? ((ctx: any) => (): void => { /* noop */ });
+    this.middleFunc = config?.middle ?? ((ctx: any) => (): void => { /* noop */ });
   }
 
   /**
@@ -57,10 +57,10 @@ class Onion {
   /**
    * Add to end
    * 设置中间件最后执行的函数
-   * @param { End } endFunc
+   * @param { Middle } middleFunc
    */
-  end(endFunc: End): void {
-    this.endFunc = endFunc;
+  middle(middleFunc: Middle): void {
+    this.middleFunc = middleFunc;
   }
 
   /**
@@ -71,7 +71,7 @@ class Onion {
    */
   dispatch(ctx: any, index: number): Function {
     if (index === this.tasks.length) {
-      return (): any => this.endFunc(ctx);
+      return (): any => this.middleFunc(ctx);
     } else {
       return (): any => this.tasks[index](ctx, this.dispatch(ctx, index + 1));
     }
