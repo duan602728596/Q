@@ -15,7 +15,7 @@ function returnMockValueAfterTime(time, value) {
 }
 
 test('Onion model test', async function() {
-  let middlewareResult, endResult;
+  // Judge whether it is over
   let end = false;
 
   function isEnd() {
@@ -29,13 +29,14 @@ test('Onion model test', async function() {
     });
   }
 
+  const mockCallback = jest.fn((value) => [...value]); // Mock func
   const onion = new Onion();
 
   onion.use(async function(ctx, next) {
     ctx.result.push(await returnMockValueAfterTime(300, 0));
     await next();
     ctx.result.push(await returnMockValueAfterTime(500, 4));
-    endResult = [...ctx.result];
+    mockCallback(ctx.result);
     end = true;
   });
 
@@ -51,11 +52,12 @@ test('Onion model test', async function() {
   });
 
   onion.middle(function(ctx) {
-    middlewareResult = [...ctx.result];
+    mockCallback(ctx.result);
   });
 
   onion.run({ result: [] });
   await isEnd();
-  expect(middlewareResult).toEqual([0, 1, 2]);
-  expect(endResult).toEqual([0, 1, 2, 3, 4]);
+  expect(mockCallback.mock.calls.length).toBe(2);
+  expect(mockCallback.mock.results[0].value).toEqual([0, 1, 2]);
+  expect(mockCallback.mock.results[1].value).toEqual([0, 1, 2, 3, 4]);
 });
