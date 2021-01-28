@@ -71,17 +71,17 @@ class Queue {
 
     yield ((): void => {
       const callFunc: any = taskFunc.call(self, ...args);
+      const callback: Function = (): void => {
+        this.workerTasks[index] = undefined;
+        this.run();
+      };
 
       // After the task is executed, assign the task again and execute the task
       // 任务执行完毕后，再次分配任务并执行任务
       if (typeof callFunc?.then === 'function') {
-        callFunc.then((): void => {
-          this.workerTasks[index] = undefined;
-          this.run();
-        });
+        callFunc.then(callback);
       } else {
-        this.workerTasks[index] = undefined;
-        this.run();
+        callback();
       }
     })();
   }
