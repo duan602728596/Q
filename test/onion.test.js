@@ -56,6 +56,7 @@ test('Onion model test', async function() {
   });
 
   onion.run({ result: [] });
+
   await isEnd();
   expect(mockCallback.mock.calls.length).toBe(2);
   expect(mockCallback.mock.results[0].value).toEqual([0, 1, 2]);

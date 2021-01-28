@@ -2,7 +2,6 @@
   "name": "@bbkkbkk/q",
   "scripts": {
     "test": "jest --testTimeout=30000",
-    "test:watch": "jest --testTimeout=30000 --watch",
     "eslint": "eslint ./ --fix"
   },
   "devDependencies": {
