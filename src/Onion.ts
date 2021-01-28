@@ -29,7 +29,7 @@ interface TaskFunc {
   (ctx: any, next: Function): Promise<void>;
 }
 
-type End = (ctx: any) => Function;
+type End = (ctx: any) => any;
 
 interface OnionConfig {
   end?: End;
@@ -37,10 +37,10 @@ interface OnionConfig {
 
 class Onion {
   public tasks: Array<TaskFunc> = [];
-  public end: End;
+  public endFunc: End;
 
   constructor(config?: OnionConfig) {
-    this.end = config?.end ?? ((ctx: any) => (): void => { /* noop */ });
+    this.endFunc = config?.end ?? ((ctx: any) => (): void => { /* noop */ });
   }
 
   /**
@@ -53,6 +53,15 @@ class Onion {
   }
 
   /**
+   * Add to end
+   * 设置中间件最后执行的函数
+   * @param { End } endFunc
+   */
+  end(endFunc: End): void {
+    this.endFunc = endFunc;
+  }
+
+  /**
    * Create an onion model
    * 创建洋葱模型
    * @param { object } ctx: context
@@ -60,11 +69,9 @@ class Onion {
    */
   dispatch(ctx: any, index: number): Function {
     if (index === this.tasks.length) {
-      return this.end(ctx);
+      return (): any => this.endFunc(ctx);
     } else {
-      return async (): Promise<void> => {
-        return await this.tasks[index](ctx, this.dispatch(ctx, index + 1));
-      };
+      return (): any => this.tasks[index](ctx, this.dispatch(ctx, index + 1));
     }
   }
 
@@ -73,8 +80,8 @@ class Onion {
    * 执行方法
    * @param { object } ctx: your context
    */
-  async run(ctx?: any): Promise<void> {
-    await this.dispatch(Object.assign({}, ctx), 0)();
+  run(ctx?: any): any {
+    return this.dispatch(Object.assign({}, ctx), 0)();
   }
 }
 
