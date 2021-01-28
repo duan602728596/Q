@@ -20,3 +20,4 @@ package.json.lerna_backup
 build
 dist
 lib
+esm

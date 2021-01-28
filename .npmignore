@@ -14,6 +14,7 @@ yarn-error.log
 .gitignore
 .npmignore
 babel.config.js
+gulpfile.js
 src
 test
 tests

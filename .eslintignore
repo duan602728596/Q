@@ -2,6 +2,7 @@
 node_modules
 
 # project
-lib
+build
 dist
-es
+lib
+esm
