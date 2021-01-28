@@ -29,7 +29,9 @@ interface TaskFunc {
   (ctx: any, next: Function): Promise<void>;
 }
 
-type End = (ctx: any) => any;
+interface End {
+  (ctx: any): any;
+}
 
 interface OnionConfig {
   end?: End;
