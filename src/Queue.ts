@@ -61,17 +61,6 @@ class Queue {
   }
 
   /**
-   * Add many to the queue of tasks waiting to be executed
-   * 添加许多到等待执行的任务队列
-   * @param { Array<Task> } tasks
-   */
-  useMore(tasks: Array<Task>): void {
-    for (const task of tasks) {
-      this.waitingTasks.unshift(task);
-    }
-  }
-
-  /**
    * Perform a task
    * 执行一个任务
    * @param { number } index
@@ -79,19 +68,22 @@ class Queue {
    */
   *executionTask(index: number, task: Task): Generator {
     const [taskFunc, self, ...args]: Task = task;
-    const callFunc: any = yield taskFunc.call(self, ...args);
 
-    if (typeof callFunc?.then === 'function') {
-      callFunc.then((): void => {
-        // After the task is executed, assign the task again and execute the task
-        // 任务执行完毕后，再次分配任务并执行任务
+    yield ((): void => {
+      const callFunc: any = taskFunc.call(self, ...args);
+
+      if (typeof callFunc?.then === 'function') {
+        callFunc.then((): void => {
+          // After the task is executed, assign the task again and execute the task
+          // 任务执行完毕后，再次分配任务并执行任务
+          this.workerTasks[index] = undefined;
+          this.run();
+        });
+      } else {
         this.workerTasks[index] = undefined;
         this.run();
-      });
-    } else {
-      this.workerTasks[index] = undefined;
-      this.run();
-    }
+      }
+    })();
   }
 
   /**
@@ -105,7 +97,7 @@ class Queue {
       const len: number = this.waitingTasks.length;
 
       if (!this.workerTasks[i] && len > 0) {
-        this.workerTasks[i] = this.executionTask(i, this.waitingTasks[i]);
+        this.workerTasks[i] = this.executionTask(i, this.waitingTasks[len - 1]);
         runIndex.push(i);
         this.waitingTasks.pop(); // Delete tasks from the task queue 从任务队列内删除任务
       }
