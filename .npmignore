@@ -13,6 +13,7 @@ yarn-error.log
 .eslintrc.js
 .gitignore
 .npmignore
+babel.config.js
 src
 test
 tests
