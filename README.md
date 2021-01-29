@@ -49,7 +49,7 @@ queue.run();
 Onion provides the function execution method of the onion model, just like Koa.
 
 ```javascript
-const onion = new Onion({ middle: middleFunc }); // or onion.middleware(middleFunc)
+const onion = new Onion({ middle: middleFunc }); // or onion.middle(middleFunc)
 
 onion.use(async function(ctx, next) {
   // ...
