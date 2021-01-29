@@ -1,11 +1,9 @@
 {
   "name": "@bbkkbkk/q",
+  "description": "Function Toolkit",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "module": "esm/index.js",
-  "exports": {
-    "require": "./lib/index.js",
-    "import": "./esm/index.js"
-  },
   "scripts": {
     "build": "npm run clean && gulp",
     "test": "jest --testTimeout=30000",

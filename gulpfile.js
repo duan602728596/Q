@@ -6,9 +6,10 @@ const tsconfig = require('./tsconfig.json');
 
 /* es6 build */
 function buildEs6() {
-  const config = Object.assign(tsconfig.compilerOptions, {
+  const config = {
+    ...tsconfig.compilerOptions,
     target: 'ES5'
-  });
+  };
   const tsResult = gulp.src('src/**/*.ts')
     .pipe(typescript(config));
 
@@ -17,10 +18,11 @@ function buildEs6() {
 
 /* commonjs build */
 function buildCommonjs() {
-  const config = Object.assign(tsconfig.compilerOptions, {
+  const config = {
+    ...tsconfig.compilerOptions,
     target: 'ES5',
     module: 'commonjs'
-  });
+  };
   const tsResult = gulp.src('src/**/*.ts')
     .pipe(typescript(config));
 
