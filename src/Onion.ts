@@ -25,12 +25,16 @@
  *   -> 2
  */
 
+interface Context {
+  [key: string]: any;
+}
+
 interface TaskFunc {
-  (ctx: any, next: Function): Promise<void>;
+  (ctx: Context, next: Function): Promise<void>;
 }
 
 interface Middle {
-  (ctx: any): any;
+  (ctx: Context): any;
 }
 
 interface OnionConfig {
@@ -42,7 +46,7 @@ class Onion {
   public middleFunc: Middle;
 
   constructor(config?: OnionConfig) {
-    this.middleFunc = config?.middle ?? ((ctx: any) => (): void => { /* noop */ });
+    this.middleFunc = config?.middle ?? ((ctx: Context) => (): void => { /* noop */ });
   }
 
   /**
@@ -66,10 +70,10 @@ class Onion {
   /**
    * Create an onion model
    * 创建洋葱模型
-   * @param { object } ctx: context
+   * @param { Context } ctx: context
    * @param { number } index
    */
-  dispatch(ctx: any, index: number): Function {
+  dispatch(ctx: Context, index: number): Function {
     if (index === this.tasks.length) {
       return (): any => this.middleFunc(ctx);
     } else {
@@ -80,9 +84,9 @@ class Onion {
   /**
    * Execution method
    * 执行方法
-   * @param { object } ctx: your context
+   * @param { Context } ctx: your context
    */
-  run(ctx?: any): any {
+  run(ctx?: Context): any {
     return this.dispatch(Object.assign({}, ctx), 0)();
   }
 }
