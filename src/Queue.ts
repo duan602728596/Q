@@ -69,24 +69,25 @@ class Queue {
   *executionTask(index: number, task: Task): Generator {
     const [taskFunc, self, ...args]: Task = task;
 
-    yield ((): undefined => {
-      const callFunc: any = taskFunc.call(self, ...args);
+    yield ((): any => {
       const callback: Function = (): void => {
         this.workerTasks[index] = undefined;
         this.run();
       };
 
-      // After the task is executed, assign the task again and execute the task
-      // 任务执行完毕后，再次分配任务并执行任务
-      if (typeof callFunc?.finally === 'function') {
-        callFunc.finally(callback);
-      } else {
-        try {
-          callback();
-        } catch { /* noop */ }
-      }
+      let callFunc: any;
 
-      return;
+      try {
+        callFunc = taskFunc.call(self, ...args);
+      } finally {
+        // After the task is executed, assign the task again and execute the task
+        // 任务执行完毕后，再次分配任务并执行任务
+        if (typeof callFunc?.finally === 'function') {
+          callFunc.finally(callback);
+        } else {
+          callback();
+        }
+      }
     })();
   }
 
