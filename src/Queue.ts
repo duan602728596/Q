@@ -69,7 +69,7 @@ class Queue {
   *executionTask(index: number, task: Task): Generator {
     const [taskFunc, self, ...args]: Task = task;
 
-    yield ((): void => {
+    yield ((): undefined => {
       const callFunc: any = taskFunc.call(self, ...args);
       const callback: Function = (): void => {
         this.workerTasks[index] = undefined;
@@ -83,6 +83,8 @@ class Queue {
       } else {
         callback();
       }
+
+      return;
     })();
   }
 
