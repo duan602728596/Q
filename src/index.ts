@@ -1,13 +1,14 @@
 import Queue from './Queue';
 import Onion from './Onion';
-import Pipe from './Pipe';
+import Pipe, { PipeModule } from './Pipe';
 
 export { Queue };
 export { Onion };
-export { Pipe };
+export { Pipe, PipeModule };
 
 export default {
   Queue,
   Onion,
-  Pipe
+  Pipe,
+  PipeModule
 };

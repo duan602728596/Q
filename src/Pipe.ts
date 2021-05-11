@@ -30,7 +30,7 @@ interface Func {
   (): Promise<any>;
 }
 
-class PipeModule {
+export class PipeModule {
   public tasks: Array<TaskFunc> = [];
   public state: any = undefined;
 
