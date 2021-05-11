@@ -1,8 +1,12 @@
-const gulp = require('gulp');
-const typescript = require('gulp-typescript');
-const { rollup } = require('rollup');
-const { terser } = require('rollup-plugin-terser');
-const tsconfig = require('./tsconfig.json');
+import path from 'path';
+import gulp from 'gulp';
+import typescript from 'gulp-typescript';
+import { rollup } from 'rollup';
+import { terser } from 'rollup-plugin-terser';
+import { metaHelper, requireJson } from '@sweet-milktea/utils';
+
+const { __dirname } = metaHelper(import.meta.url);
+const tsconfig = await requireJson(path.join(__dirname, 'tsconfig.json'));
 
 /* es6 build */
 function buildEs6() {
@@ -47,7 +51,7 @@ function buildDist(compression) {
   };
 }
 
-exports.default = gulp.series(
+export default gulp.series(
   gulp.parallel(buildEs6, buildCommonjs),
   gulp.parallel(buildDist(true), buildDist(false))
 );
