@@ -15,6 +15,12 @@
   },
   "main": "lib/index.js",
   "module": "esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "default": "./lib/index.js"
+    }
+  },
   "scripts": {
     "build": "npm run clean && gulp",
     "test": "jest --testTimeout=30000",

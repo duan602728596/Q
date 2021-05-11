@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import gulp from 'gulp';
 import typescript from 'gulp-typescript';
 import { rollup } from 'rollup';
@@ -51,7 +52,16 @@ function buildDist(compression) {
   };
 }
 
+/* 写入package.js文件 */
+async function writeTypeModulePackageJsonFile() {
+  await fs.promises.writeFile(
+    path.join(__dirname, 'esm/package.json'),
+    JSON.stringify({ type: 'module' }, null, 2) + '\n'
+  );
+}
+
 export default gulp.series(
   gulp.parallel(buildEs6, buildCommonjs),
+  writeTypeModulePackageJsonFile,
   gulp.parallel(buildDist(true), buildDist(false))
 );
