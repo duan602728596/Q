@@ -4,13 +4,14 @@ import gulp from 'gulp';
 import typescript from 'gulp-typescript';
 import { rollup } from 'rollup';
 import { terser } from 'rollup-plugin-terser';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { metaHelper, requireJson } from '@sweet-milktea/utils';
 
 const { __dirname } = metaHelper(import.meta.url);
 const tsconfig = await requireJson(path.join(__dirname, 'tsconfig.json'));
 
-/* es6 build */
-function buildEs6() {
+/* esm build */
+function buildEsm() {
   const config = {
     ...tsconfig.compilerOptions,
     target: 'ES5'
@@ -39,7 +40,8 @@ function buildDist(compression) {
   return async function() {
     const bundle = await rollup({
       input: 'esm/index.js',
-      plugins: compression ? [terser()] : undefined,
+      plugins: [nodeResolve({ browser: true })]
+        .concat(compression ? [terser({ format: { comments: false } })] : []),
       moduleContext: (name) => 'this'
     });
 
@@ -61,7 +63,7 @@ async function writeTypeModulePackageJsonFile() {
 }
 
 export default gulp.series(
-  gulp.parallel(buildEs6, buildCommonjs),
+  gulp.parallel(buildEsm, buildCommonjs),
   writeTypeModulePackageJsonFile,
   gulp.parallel(buildDist(true), buildDist(false))
 );

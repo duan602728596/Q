@@ -7,7 +7,8 @@
     "target": "ES2020",
     "newLine": "LF",
     "resolveJsonModule": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "importHelpers": true
   },
   "exclude": [
     "node_modules"

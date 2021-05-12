@@ -10,6 +10,7 @@ yarn-error.log
 .idea
 
 # ignore
+esm-helper
 .editorconfig
 .eslintignore
 .eslintrc.js
