@@ -34,6 +34,12 @@ interface Func {
   (): Promise<any>;
 }
 
+interface DispatchArgs {
+  index: number;
+  resolve: Function;
+  destFunc?: DestFunc;
+}
+
 export class PipeCore {
   public tasks: Array<TaskFunc> = [];
   public state: any = undefined;
@@ -56,12 +62,20 @@ export class PipeCore {
   /**
    * @param { number } index
    * @param { Function } resolve
+   * @param { DestFunc } destFunc
    */
-  dispatch(index: number, resolve: Function): Function {
+  dispatch({ index, resolve, destFunc }: DispatchArgs): Function {
     if (index === this.tasks.length) {
-      return (): any => resolve();
+      return async (): Promise<any> => {
+        destFunc && (await destFunc(this.state));
+        resolve();
+      };
     } else {
-      return (): any => this.tasks[index](this.state, this.dispatch(index + 1, resolve));
+      return (): any => this.tasks[index](this.state, this.dispatch({
+        index: index + 1,
+        resolve,
+        destFunc
+      }));
     }
   }
 
@@ -69,10 +83,13 @@ export class PipeCore {
    * Begin execution
    * 开始执行
    */
-  dest(func?: DestFunc): Promise<any> {
-    return new Promise(async (resolve: Function, reject: Function): Promise<void> => {
-      func && (await func(this.state));
-      this.dispatch(0, resolve)();
+  dest(destFunc?: DestFunc): Promise<any> {
+    return new Promise((resolve: Function, reject: Function): void => {
+      this.dispatch({
+        index: 0,
+        resolve,
+        destFunc
+      })();
     });
   }
 }
