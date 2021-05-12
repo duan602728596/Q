@@ -1,6 +1,6 @@
-import Queue from './Queue';
-import Onion from './Onion';
-import Pipe, { PipeCore } from './Pipe';
+import Queue from './Queue.js';
+import Onion from './Onion.js';
+import Pipe, { PipeCore } from './Pipe.js';
 
 export { Queue };
 export { Onion };
