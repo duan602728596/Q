@@ -5,7 +5,7 @@ Q is a function toolkit.
 ## How to use
 
 ```javascript
-import { Queue, Onion } from '@bbkkbkk/q';
+import { Queue, Onion, Pipe } from '@bbkkbkk/q';
 ```
 
 or
@@ -13,7 +13,7 @@ or
 ```html
 <script src="Q.js"></script>
 <script>
-  var { Queue, Onion } = Q;  
+  var { Queue, Onion, Pipe } = Q;  
 </script>
 ```
 
@@ -80,3 +80,50 @@ onion.run({ key: value });
 * onion.use: Add multiple middleware functions.
 * onion.run: To start execution, you can pass the initial ctx.
 * onion.middle: Set the function when the middleware executes to the middle.
+
+### Pipe
+
+Pipe method implements a pipe flow.
+
+```javascript
+function project_0(state, callback) {
+  // do something
+  callback();
+}
+
+function project_1(state, callback) {
+  // do something
+  callback();
+}
+
+function project_dest(state) {
+  // do something
+}
+
+await Pipe(initialState)
+  .pipe(project_0)
+  .pipe(project_1)
+  .dest(project_dest);
+```
+
+* initialState: Initial data.
+* pipe: Pass a function for pipeline.
+* dest: Start processing through the pipeline. You can pass a method of final processing data or not.
+  
+```javascript
+// Pipe.series and Pipe.parallel
+const run = Pipe.series(
+  project_0,
+  project_1,
+  Pipe.parallel(
+    project_2_1,
+    project_2_2,
+    project_2_3
+  ),
+  Pipe.series(project_3, project_4, project_5),
+  project_end
+);
+```
+
+* Pipe.series: Serial execution a series of methods.
+* Pipe.parallel: Parallel implement a series of methods.
