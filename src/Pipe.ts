@@ -23,7 +23,11 @@
  */
 
 interface TaskFunc {
-  (state: any, next: Function): Promise<void>;
+  (state: any, callback: Function): Promise<void>;
+}
+
+interface DestFunc {
+  (state: any): Promise<void>;
 }
 
 interface Func {
@@ -65,8 +69,9 @@ export class PipeCore {
    * Begin execution
    * 开始执行
    */
-  dest(): Promise<any> {
-    return new Promise((resolve: Function, reject: Function): void => {
+  dest(func?: DestFunc): Promise<any> {
+    return new Promise(async (resolve: Function, reject: Function): Promise<void> => {
+      func && (await func(this.state));
       this.dispatch(0, resolve)();
     });
   }
