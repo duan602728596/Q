@@ -30,7 +30,7 @@ interface Func {
   (): Promise<any>;
 }
 
-export class PipeModule {
+export class PipeCore {
   public tasks: Array<TaskFunc> = [];
   public state: any = undefined;
 
@@ -72,8 +72,8 @@ export class PipeModule {
   }
 }
 
-function Pipe(state: any): PipeModule {
-  const pipe: PipeModule = new PipeModule(state);
+function Pipe(state: any): PipeCore {
+  const pipe: PipeCore = new PipeCore(state);
 
   return pipe;
 }
