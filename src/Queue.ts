@@ -15,12 +15,13 @@
  * function task() { / * do something * / }
  *
  * const queue = new Queue({ workerLen: 3 });
- * queue.useMore([
+ *
+ * queue.use(
  *   [task, undefined, 1],
  *   [task, undefined, 2],
  *   [task, undefined, 3],
  *   // ...
- * ]);
+ * );
  * queue.run();
  *
  * queue.use([task, undefined, 4]);
